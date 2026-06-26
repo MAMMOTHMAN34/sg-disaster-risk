@@ -1,0 +1,11 @@
+{
+  "_comment": "Area of interest for Singapore mainland. Grid spacing in degrees: ~0.006 deg is roughly 670 m at the equator. Smaller spacing = finer detail but more API calls (OpenTopoData free tier allows 100 points/call, 1 call/sec, 1000 calls/day).",
+  "name": "Singapore mainland",
+  "bbox": {
+    "lat_min": 1.21,
+    "lat_max": 1.47,
+    "lon_min": 103.60,
+    "lon_max": 104.04
+  },
+  "grid_spacing_deg": 0.006
+}
