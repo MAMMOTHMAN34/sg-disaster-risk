@@ -1,0 +1,4 @@
+# Phase 0 dependencies. We add more as each phase needs them, so the
+# install stays lean and you understand why every package is here.
+requests>=2.31
+pandas>=2.0
