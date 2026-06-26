@@ -1,0 +1,6 @@
+{
+  "_comment": "Historical daily rainfall pull from the Meteorological Service archive (weather.gov.sg). Per-station monthly CSVs give daily rainfall total + highest 30/60/120-min intensity — intensity is the real flash-flood trigger. ~40 of the 76 live gauges have deep history; the rest are newer and skipped automatically.",
+  "year_start": 2009,
+  "year_end": 2025,
+  "request_delay_s": 0.1
+}
