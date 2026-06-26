@@ -1,0 +1,5 @@
+{
+  "_comment": "data.gov.sg dataset for URA Master Plan 2019 Planning Area boundaries (No Sea = land polygons only, which is what we want for clipping elevation to land). Downloaded via the data.gov.sg poll-download API, which returns a short-lived presigned URL.",
+  "dataset_id": "d_4765db0e87b9c86336792efe8a1f7a66",
+  "name": "Master Plan 2019 Planning Area Boundary (No Sea)"
+}
