@@ -1,6 +1,6 @@
 # Singapore Disaster Risk Mapping
 
-A data-driven project aiming to find out environmental hazards that actually affect Singapore.
+A project aiming to find out environmental hazards that actually affect Singapore.
 It is grounded in real, open data, and honest about which risks are present-day
 versus low-probability risks.
 
