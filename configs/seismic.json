@@ -1,0 +1,11 @@
+{
+  "_comment": "Region and filters for the USGS earthquake pull. The bbox covers the Sunda Megathrust off Sumatra, the Sunda Strait (Krakatau), and the Andaman Sea — the sources whose quakes/tsunamis could plausibly reach Singapore. min_magnitude 5.0 since 1960 keeps the pull meaningful and well under the USGS 20k-row cap.",
+  "region": {
+    "lat_min": -8,
+    "lat_max": 16,
+    "lon_min": 90,
+    "lon_max": 110
+  },
+  "start_date": "1960-01-01",
+  "min_magnitude": 5.0
+}
