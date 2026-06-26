@@ -5,3 +5,6 @@ pandas>=2.0
 # geospatial: read planning-area polygons, clip the elevation grid to
 # land, and do point-in-polygon joins. geopandas pulls in shapely + pyproj.
 geopandas>=0.14
+
+# Interactive maps: choropleth of per-area risk, saved as standalone HTML.
+folium>=0.15
