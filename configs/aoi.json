@@ -7,5 +7,6 @@
     "lon_min": 103.60,
     "lon_max": 104.04
   },
-  "grid_spacing_deg": 0.003
+  "grid_spacing_deg": 0.003,
+  "dem_grid_spacing_deg": 0.001
 }

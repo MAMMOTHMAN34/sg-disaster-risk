@@ -40,24 +40,33 @@ slightly inaccurate (clickbaity) headlines and replace them with what the eviden
 Singapore's defining environmental risk is **water** (rising seas + intense rainfall),
 not earthquakes.
 
-## What it does (planned)
+## What it does
 
-| Layer | Hazard | Approach |
-|-------|--------|----------|
-| Sea-level-rise inundation | Coastal flooding | Map which low-lying areas flood under the official SLR scenarios (+1 m, +2 m, +5 m surge) using elevation data |
-| Flood risk index | Flash flooding | Rainfall intensity × terrain (elevation, drainage, imperviousness), validated against PUB's known flood-prone areas |
-| Economic exposure | Both | Population, land use and property value sitting inside the inundation zones: a back-of-envelope cost vs. the S$100 B coastal-defence commitment |
-| Tail-risk layer | Tsunami / seismic | USGS Sunda-shelf seismic history + the 2024 tsunami finding, shown as low-probability context |
-| Dashboard | All | Interactive Folium / Streamlit map with per-planning-area risk scores |
+Two flood hazards, treated with equal depth, plus a low-probability tail risk.
+
+| Track | Hazard | What I do |
+|-------|--------|-----------|
+| **Coastal flooding** | Rising seas | Map which neighbourhoods flood as the sea rises, under Singapore's own official scenarios (+1m by 2100, +2m by 2150, ~4m with storm surge + high tide), built from elevation data |
+| **Flash flooding** | Intense rain | Use 17 years of rain-gauge data (2009–2025) to map which areas get the most intense downpours, and test whether heavy rain is becoming more frequent |
+| **Economic exposure** | Coastal | How many residents live inside the low-lying flood zones, set against the S$100 billion coastal-defence commitment |
+| **Tail-risk context** | Tsunami / seismic | Sunda-shelf earthquake history + the 2024 tsunami study, shown as low-probability context (Singapore feels distant tremors but generates no quakes of its own) |
+| **Dashboard** | All | One interactive map tying the layers together |
+
+**Key finding so far:** a flood score built from terrain ranks Singapore's
+actual flash-flood hotspots (Geylang, Bukit Timah) *low*, as those places
+flood from overwhelmed **drains**, not low ground. Thus, terrain explains
+**coastal** flooding well, while flash flooding is really an **infrastructure**
+problem. This is why the government's response is drains and seawalls.
 
 ## Data sources (all open)
 
-- **Rainfall**: [data.gov.sg real-time API](https://data.gov.sg) (NEA rain gauges)
+- **Rainfall (live)**: [data.gov.sg real-time API](https://data.gov.sg) (NEA rain gauges)
+- **Rainfall (history + intensity)**: [weather.gov.sg daily archive](https://www.weather.gov.sg/climate-historical-daily/) — per-station daily totals and 30/60/120-min bursts, 2009–2025
 - **Elevation**: SRTM / OpenTopoData (low-lying zone identification)
+- **Planning-area boundaries**: data.gov.sg (URA Master Plan 2019)
 - **Sea-level-rise scenarios**: NCCS Third National Climate Change Study (2024)
-- **Flood-prone areas**: PUB / data.gov.sg
 - **Seismic events**: USGS Earthquake API
-- **Land use & population**: data.gov.sg / SingStat (for economic exposure)
+- **Population**: data.gov.sg / SingStat (residents by planning area, for economic exposure)
 
 ## Setup
 

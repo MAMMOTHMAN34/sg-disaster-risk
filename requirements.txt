@@ -8,3 +8,6 @@ geopandas>=0.14
 
 # Interactive maps: choropleth of per-area risk, saved as standalone HTML.
 folium>=0.15
+
+# Read the Copernicus GLO-30 elevation rasters (GeoTIFF) for the coastal layers.
+rasterio>=1.3
