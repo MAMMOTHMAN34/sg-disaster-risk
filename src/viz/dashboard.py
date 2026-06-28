@@ -1,9 +1,9 @@
 """Combined interactive dashboard: all hazard layers on one map.
 
 Builds a single Folium map with toggleable layers, which are: coastal sea-level-rise
-exposure, flash-flood rainfall exposure, residents exposed, and the regional
-earthquake tail-risk. Then, the map writes it to docs/index.html so it can be served
-directly by GitHub Pages.
+exposure (at +1m / +2m / +4m), flash-flood rainfall exposure, residents exposed,
+and the regional earthquake tail-risk. It writes to docs/index.html so it can be
+served directly by GitHub Pages.
 
     python -m src.viz.dashboard
 
@@ -28,13 +28,20 @@ OUT_PATH = REPO_ROOT / "docs" / "index.html"
 
 SG_CENTER = (1.3521, 103.8198)
 
+# Coastal scenarios share one colour scale + legend so the three toggles look
+# consistent and the corner isn't cluttered with three near-identical legends.
+COASTAL_SCENARIOS = [
+    ("pct_y2100_1m", "Coastal: flooded at +1 m (≈2100)", False),
+    ("pct_y2150_2m", "Coastal: flooded at +2 m (≈2150)", True),   # default view
+    ("pct_worstcase_4m", "Coastal: flooded at +4 m (worst case)", False),
+]
+COASTAL_TOOLTIP_FIELDS = ["planning_area", "pct_y2100_1m", "pct_y2150_2m", "pct_worstcase_4m"]
+COASTAL_TOOLTIP_ALIASES = ["Area", "% flooded +1 m", "% flooded +2 m", "% flooded +4 m"]
 
-def choropleth_layer(fmap, gdf, column, name, caption, palette, show, tooltip_fields, tooltip_aliases):
+
+def choropleth_layer(fmap, gdf, column, name, show, colormap, tooltip_fields,
+                     tooltip_aliases, add_legend=True):
     """Add one toggleable choropleth layer coloured by `column`."""
-    valid = gdf[column].dropna()
-    colormap = palette.scale(float(valid.min()), float(valid.max()))
-    colormap.caption = caption
-
     fg = folium.FeatureGroup(name=name, show=show)
     folium.GeoJson(
         gdf,
@@ -46,7 +53,8 @@ def choropleth_layer(fmap, gdf, column, name, caption, palette, show, tooltip_fi
         tooltip=folium.GeoJsonTooltip(fields=tooltip_fields, aliases=tooltip_aliases, localize=True),
     ).add_to(fg)
     fg.add_to(fmap)
-    colormap.add_to(fmap)
+    if add_legend:
+        colormap.add_to(fmap)
 
 
 def quake_layer(fmap):
@@ -73,38 +81,50 @@ def main() -> None:
     exposure = boundaries.merge(pd.read_csv(PROC / "economic_exposure_by_area.csv"),
                                 on="planning_area", how="left")
 
-    # tiles=None so Folium doesn't auto-add the basemap as a toggle named
-    # "cartodbpositron"; add it ourselves with control=False to keep it out
-    # of the layer control (it's the background, not a hazard layer).
+    # tiles=None + an explicit basemap with control=False keeps "cartodbpositron"
+    # out of the layer control (it's the background, not a hazard layer).
     fmap = folium.Map(location=SG_CENTER, zoom_start=11, tiles=None)
     folium.TileLayer("CartoDB positron", name="Base map", control=False).add_to(fmap)
 
-    choropleth_layer(
-        fmap, slr, "pct_y2150_2m", "Coastal: % land flooded at +2 m (≈2150)",
-        "% of land ≤ 2 m", cm.linear.Blues_09, show=True,
-        tooltip_fields=["planning_area", "pct_y2100_1m", "pct_y2150_2m", "pct_worstcase_4m"],
-        tooltip_aliases=["Area", "% flooded +1 m", "% flooded +2 m", "% flooded +4 m"],
+    # --- Coastal: three sea-level scenarios sharing one blue scale + legend ---
+    coastal_max = max(slr[c].max() for c, _, _ in COASTAL_SCENARIOS)
+    coastal_cmap = cm.linear.Blues_09.scale(0, float(coastal_max))
+    coastal_cmap.caption = "Coastal: % of land flooded (sea-level scenarios)"
+    for column, name, show in COASTAL_SCENARIOS:
+        choropleth_layer(
+            fmap, slr, column, name, show, coastal_cmap,
+            COASTAL_TOOLTIP_FIELDS, COASTAL_TOOLTIP_ALIASES,
+            add_legend=show,  # add the shared legend once, on the default layer
+        )
+
+    # --- Flash flooding: heavy-rain-day exposure ---
+    flash = susc.dropna(subset=["heavy_days_per_year"])
+    flash_cmap = cm.linear.YlGnBu_09.scale(
+        float(flash["heavy_days_per_year"].min()), float(flash["heavy_days_per_year"].max())
     )
+    flash_cmap.caption = "Flash: heavy-rain days/yr (≥50 mm, nearest gauge)"
     choropleth_layer(
         fmap, susc, "heavy_days_per_year", "Flash: heavy-rain days/yr (nearest gauge)",
-        "Heavy-rain days/yr (≥50 mm)", cm.linear.YlGnBu_09, show=False,
-        tooltip_fields=["planning_area", "heavy_days_per_year", "nearest_gauge"],
-        tooltip_aliases=["Area", "Heavy-rain days/yr", "Nearest gauge"],
+        False, flash_cmap, ["planning_area", "heavy_days_per_year", "nearest_gauge"],
+        ["Area", "Heavy-rain days/yr", "Nearest gauge"],
     )
+
+    # --- Economic exposure: residents in the +2 m flood zone ---
+    exp_cmap = cm.linear.OrRd_09.scale(0, float(exposure["exposed_2150_2m"].max()))
+    exp_cmap.caption = "Exposure: residents in +2 m flood zone"
     choropleth_layer(
         fmap, exposure, "exposed_2150_2m", "Exposure: residents flooded at +2 m",
-        "Residents in +2 m flood zone", cm.linear.OrRd_09, show=False,
-        tooltip_fields=["planning_area", "population", "exposed_2150_2m"],
-        tooltip_aliases=["Area", "Residents", "Residents exposed +2 m"],
+        False, exp_cmap, ["planning_area", "population", "exposed_2150_2m"],
+        ["Area", "Residents", "Residents exposed +2 m"],
     )
-    quake_layer(fmap)
 
+    quake_layer(fmap)
     folium.LayerControl(collapsed=False).add_to(fmap)
 
     OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     fmap.save(str(OUT_PATH))
     print(f"Saved dashboard to {OUT_PATH}")
-    print("To host: push, then GitHub repo Settings -> Pages -> Deploy from branch -> /docs")
+    print("Layers: coastal +1/+2/+4 m, flash, exposure, earthquakes")
 
 
 if __name__ == "__main__":
