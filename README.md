@@ -102,16 +102,16 @@ it feels distant tremors but generates no quakes of its own.
 What this analysis can't yet see, and where I'd take it next:
 
 - **Elevation is a *surface* model** (includes buildings) and 2013 predates the
-  newest reclamation (Tuas mega port), which still reads low. *Next:* a
-  bare-earth LiDAR DEM would give true ground heights.
+  newest reclamation (Tuas mega port), which still reads low.
+    *Next:* a bare-earth LiDAR DEM would give true ground heights.
 - **Flash flooding isn't really modelled.** The terrain index shows *why* (it's a
   drainage problem), but a real flash-flood model needs PUB's drainage-network
-  and historical flood-incident data. *Next:* obtain those to model pluvial risk
-  properly.
-- **Exposure is residential only** — it assumes residents spread evenly within an
-  area and excludes ~1.5 m non-resident workers, so it misses daytime/economic
-  exposure in places like Tuas. *Next:* add a gridded population and land-value
-  layer.
+  and historical flood-incident data.
+    *Next:* obtain those to model pluvial risk properly.
+- **Exposure is residential only**. It assumes residents spread evenly within an
+  area and excludes ~1.5 million non-resident workers, so it misses daytime/economic
+  exposure in places like Tuas.
+    *Next:* add a gridded population and land-value layer.
 - **17 years is short for climate trends.** *Next:* fold in the downscaled NCCS
   V3 projections to extend the rainfall outlook.
 
@@ -129,7 +129,7 @@ What this analysis can't yet see, and where I'd take it next:
 ## Data sources
 
 - **Rainfall (live)**: [data.gov.sg real-time API](https://data.gov.sg) (NEA rain gauges)
-- **Rainfall (history + intensity)**: [weather.gov.sg daily archive](https://www.weather.gov.sg/climate-historical-daily/) — per-station daily totals and 30/60/120-min bursts, 2009–2025
+- **Rainfall (history + intensity)**: [weather.gov.sg daily archive](https://www.weather.gov.sg/climate-historical-daily/): per-station daily totals and 30/60/120-min bursts, 2009–2025
 - **Elevation**: [Copernicus GLO-30 DEM](https://copernicus-dem-30m.s3.amazonaws.com/) (~2013, includes post-2000 reclamation; SRTM 2000 used earlier but superseded)
 - **Planning-area boundaries**: data.gov.sg (URA Master Plan 2019)
 - **Sea-level-rise scenarios**: NCCS Third National Climate Change Study (2024)
@@ -139,10 +139,6 @@ What this analysis can't yet see, and where I'd take it next:
 ## Stack
 
 Python · pandas · GeoPandas · rasterio · SciPy · Matplotlib · Folium · requests
-
-*(No black-box ML: the risk layers are deliberately transparent — elevation
-thresholds, rainfall counts, and a clearly-weighted index — so every number can
-be explained and defended.)*
 
 ## Setup & pipeline
 
@@ -158,7 +154,7 @@ python -m src.data.fetch_population         # residents per planning area
 
 # 2. Build the layers
 python -m src.features.inundation          # low-lying land per area
-python -m src.features.slr_scenarios       # flooding at +1/+2/+4 m
+python -m src.features.slr_scenarios       # flooding at +1/+2/+4m
 python -m src.features.rainfall_stats       # per-gauge rainfall climatology
 python -m src.features.flood_index          # coastal/flash susceptibility
 python -m src.features.rainfall_trend       # is heavy rain getting worse?
