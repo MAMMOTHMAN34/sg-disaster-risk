@@ -1,0 +1,5 @@
+{
+  "_comment": "data.gov.sg / SingStat: Resident Population by Planning Area, Census of Population 2020. Aligned to URA Master Plan 2019 planning areas (same as our boundaries). NOTE: 'resident' = citizens + PRs only; it excludes non-resident foreign workers, so it undercounts total people present.",
+  "dataset_id": "d_e7ae90176a68945837ad67892b898466",
+  "name": "Resident Population by Planning Area (Census 2020)"
+}
