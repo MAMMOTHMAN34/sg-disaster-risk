@@ -1,7 +1,8 @@
 """Sample elevation from the Copernicus GLO-30 DEM (~2013) for Singapore.
 
-This supersedes the SRTM/OpenTopoData sampler (`fetch_elevation.py`) for the
-coastal analysis. SRTM was captured in 2000, so it sees land reclaimed since then (Jurong Island, Tuas, parts of Changi) as open sea (height 0), which made those
+This replaced an earlier SRTM/OpenTopoData sampler for the coastal analysis.
+SRTM was captured in 2000, so it sees land reclaimed since then (Jurong Island,
+Tuas, parts of Changi) as open sea (height 0), which made those
 areas falsely "flood" in the sea-level-rise scenarios. Copernicus GLO-30 was
 captured around 2013, so it includes that reclamation and gives accurate heights.
 

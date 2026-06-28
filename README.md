@@ -54,7 +54,7 @@ Two flood hazards, treated with equal depth, plus a low-probability tail risk.
 ## Results
 
 An interactive version of all layers (toggle coastal / flash / exposure /
-earthquakes) is in `docs/index.html`.
+earthquakes) is **[live here](https://MAMMOTHMAN34.github.io/sg-disaster-risk/)**.
 
 ### Coastal flooding (rising seas)
 
@@ -62,9 +62,9 @@ Using 2013 Copernicus elevation, under Singapore's official sea-level scenarios:
 
 | Scenario | Land that floods | Residents exposed (today) |
 |----------|------------------|---------------------------|
-| +1 m (≈2100) | ~10% | ~119,000 (2.9%) |
-| +2 m (≈2150) | ~11% | ~135,000 (3.3%) |
-| +4 m (worst case) | ~17% | ~238,000 (5.9%) |
+| +1m (≈2100) | ~10% | ~119,000 (2.9%) |
+| +2m (≈2150) | ~11% | ~135,000 (3.3%) |
+| +4m (worst case) | ~17% | ~238,000 (5.9%) |
 
 The S$100 billion coastal-defence budget works out to roughly **S$740,000 per
 exposed resident** at +2m. However, the most-flooded land (Tuas, Jurong Island) is
@@ -94,13 +94,34 @@ it feels distant tremors but generates no quakes of its own.
 
 ![Regional earthquakes](reports/figures/seismic_tailrisk.png)
 
-### Limitations
+### Limitations & future work
 
-- Elevation is a *surface* model (includes buildings) and 2013 predates the
-  newest reclamation (Tuas mega port), which still reads low.
-- Exposure assumes residents are spread evenly within each planning area, and
-  "resident" population excludes ~1.5 m non-resident workers.
-- A 17-year rainfall record is short for detecting climate trends.
+What this analysis can't yet see, and where I'd take it next:
+
+- **Elevation is a *surface* model** (includes buildings) and 2013 predates the
+  newest reclamation (Tuas mega port), which still reads low. *Next:* a
+  bare-earth LiDAR DEM would give true ground heights.
+- **Flash flooding isn't really modelled.** The terrain index shows *why* (it's a
+  drainage problem), but a real flash-flood model needs PUB's drainage-network
+  and historical flood-incident data. *Next:* obtain those to model pluvial risk
+  properly.
+- **Exposure is residential only** — it assumes residents spread evenly within an
+  area and excludes ~1.5 m non-resident workers, so it misses daytime/economic
+  exposure in places like Tuas. *Next:* add a gridded population and land-value
+  layer.
+- **17 years is short for climate trends.** *Next:* fold in the downscaled NCCS
+  V3 projections to extend the rainfall outlook.
+
+## Key takeaways
+
+- Singapore's defining environmental risk is **water**.
+- **~135,000 residents** sit in the +2m sea-level-rise zone; coastal defence
+  works out to roughly **S$740k per exposed resident**.
+- **Human** flood exposure (HDB towns) and **economic** flood exposure (western
+  industrial reclamations) are different maps, as population data alone misses the latter.
+- Flash flooding is an **infrastructure** problem (drains).
+- Earthquake/tsunami risk is real but **low-probability**, since Singapore sits off
+  the seismic arc.
 
 ## Data sources
 
