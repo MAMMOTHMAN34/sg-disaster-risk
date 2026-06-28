@@ -4,6 +4,9 @@ A project aiming to find out environmental hazards that actually affect Singapor
 It is grounded in real, open data, and honest about which risks are present-day
 versus low-probability risks.
 
+**[Explore the interactive map here](https://MAMMOTHMAN34.github.io/sg-disaster-risk/)!**
+Static results below.
+
 ## Why I built this
 
 I recall seeing the claim that Singapore, which is long considered safe from natural disasters, might now face hazards that were "previously impossible," like earthquakes. As a
